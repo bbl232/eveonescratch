@@ -14,7 +14,7 @@ make
 sudo make install
 popd
 
-sudo pip install stratchpy
+sudo pip install scratchpy
 
 git clone https://github.com/bbl232/eveonescratch
 sudo mv eveonescratch /opt/eveonescratch
