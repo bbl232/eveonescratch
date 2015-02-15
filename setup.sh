@@ -14,10 +14,12 @@ make
 sudo make install
 popd
 
+git clone https://github.com/bbl232/eveonescratch /opt/eveonescratch
+
 sudo modprobe spi_bcm2708
 echo spi_bcm2708 | sudo tee -a /etc/modules
 
-echo "alias scratch='/usr/bin/scratch --document\"$SCRIPT_DIR/nightlight.sb\"'" >> $HOME/.bashrc
+echo "alias scratch='/opt/eveonescratch/start.sh'" >> $HOME/.bashrc
 sudo echo "sudo python $SCRIPT_DIR/eve_one_mesh.py &" >> /etc/rc.local
 
 sudo cp eve_one_server.sh /etc/init.d/eve_one_server
