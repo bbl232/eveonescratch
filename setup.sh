@@ -15,6 +15,7 @@ sudo make install
 popd
 
 git clone https://github.com/bbl232/eveonescratch /opt/eveonescratch
+cp /opt/eveonescratch/scratch.desktop $HOME/Desktop/scratch.desktop 
 
 sudo modprobe spi_bcm2708
 echo spi_bcm2708 | sudo tee -a /etc/modules

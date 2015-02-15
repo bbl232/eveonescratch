@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=EveOneScratch
+Comment=Scratch for EveOne
+Exec=/opt/eveonescratch/start.sh
+Terminal=false
+Type=Application
+MimeType=text/plain
