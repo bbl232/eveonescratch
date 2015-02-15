@@ -14,6 +14,8 @@ make
 sudo make install
 popd
 
+sudo pip install stratchpy
+
 git clone https://github.com/bbl232/eveonescratch
 sudo mv eveonescratch /opt/eveonescratch
 cp /opt/eveonescratch/scratch.desktop $HOME/Desktop/scratch.desktop 
@@ -22,11 +24,4 @@ sudo modprobe spi_bcm2708
 echo spi_bcm2708 | sudo tee -a /etc/modules
 
 echo "alias scratch='/opt/eveonescratch/start.sh'" >> $HOME/.bashrc
-
-echo "Done installing, reboot? [y/N]"
-read r
-if [[ "y" == "${r}" ]]; then
-    sudo reboot
-  else
-    echo "You will need to reboot manually to apply changes."
-fi
+echo "You will need to reboot manually to apply changes."
