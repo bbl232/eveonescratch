@@ -20,6 +20,9 @@ echo spi_bcm2708 | sudo tee -a /etc/modules
 echo "alias scratch='/usr/bin/scratch --document\"$SCRIPT_DIR/nightlight.sb\"'" >> $HOME/.bashrc
 sudo echo "sudo python $SCRIPT_DIR/eve_one_mesh.py &" >> /etc/rc.local
 
+sudo cp eve_one_server.sh /etc/init.d/eve_one_server
+sudo chmod +x /etc/init.d/eve_one_server
+
 echo "Done installing, reboot? [y/N]"
 read r
 if [[ "y" == "${r}" ]]; then
