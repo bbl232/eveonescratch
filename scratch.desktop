@@ -3,5 +3,6 @@ Name=EveOneScratch
 Comment=Scratch for EveOne
 Exec=/opt/eveonescratch/start.sh
 Terminal=false
+Icon=/opt/eveonescratch/eveone.ico
 Type=Application
 MimeType=text/plain
