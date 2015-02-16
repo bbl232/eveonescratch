@@ -12,7 +12,7 @@ To install this package simply run
 # Use
 
 The left side of the EveBoard pin out can be used as outputs.
-To control output broadcast '&lt;pin&rt; &lt;on|off&rt;' from within scratch.
+To control output broadcast '&lt;pin&gt; &lt;on|off&gt;' from within scratch.
 
 e.g. To turn on the pin labelled IC2_SDA you would broadcast
 `sda on`
