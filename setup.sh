@@ -2,8 +2,6 @@
 
 set -e
 
-SCRIPT_DIR=`pwd`
-
 #install scratch
 sudo apt-get update
 sudo apt-get install -y scratch python-pip python-dev build-essential git
