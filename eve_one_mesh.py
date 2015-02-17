@@ -19,7 +19,7 @@ def parse_broadcast(msg,pin_map,out_pins):
         GPIO.output(pin_map[pin], (0 if state == "off" else 1))
       except IndexError:
         pass
-  except AttributeError:
+  except Exception:
     pass
 
 
