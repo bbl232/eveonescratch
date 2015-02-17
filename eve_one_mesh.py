@@ -12,13 +12,13 @@ GPIO.cleanup()
 def parse_broadcast(msg,pin_map,out_pins):
   try:
     if msg[0] == "broadcast":
-    args = msg[1].split(' ')
-    pin = args[0].upper()
-    try:
-      state = args[1].lower()
-      GPIO.output(pin_map[pin], (0 if state == "off" else 1))
-    except IndexError:
-      pass
+      args = msg[1].split(' ')
+      pin = args[0].upper()
+      try:
+        state = args[1].lower()
+        GPIO.output(pin_map[pin], (0 if state == "off" else 1))
+      except IndexError:
+        pass
   except AttributeError:
     pass
 
