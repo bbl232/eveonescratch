@@ -3,25 +3,35 @@ import socket
 import time
 import sys
 import scratch
+import signal
 import RPi.GPIO as GPIO
 import spidev
 import thread
 
-GPIO.cleanup()
+pwm = {}
 
 def parse_broadcast(msg,pin_map,out_pins):
   try:
     if msg[0] == "broadcast":
       args = msg[1].split(' ')
-      pin = args[0].upper()
-      try:
-        state = args[1].lower()
-        GPIO.output(pin_map[pin], (0 if state == "off" else 1))
-      except IndexError:
-        pass
+      if args[0].lower() == "pwm":
+        pin = args[1].upper()
+        if args[2].lower() == "off":
+          pwm[pin].stop();
+        elif pin in pwm and float(args[2])>=0.0 and float(args[2])<=100.0:
+          pwm[pin].ChangeDutyCycle(float(args[2]))
+        elif pin not in pwm and float(args[2])>=0.0 and float(args[2])<=100.0:
+          pwm[pin] = GPIO.PWM(pin_map[pin], 50)
+          pwm[pin].start(float(args[2]))
+      else:
+        pin = args[0].upper()
+        try:
+          state = args[1].lower()
+          GPIO.output(pin_map[pin], (0 if state == "off" else 1))
+        except IndexError:
+          pass
   except Exception:
     pass
-
 
 def listen(s,pin_map,out_pins):
   while True:
@@ -35,7 +45,6 @@ def listen(s,pin_map,out_pins):
         except scratch.ScratchError:
           pass
         time.sleep(0.1)
-
 
 def _eve_adc_bitstring(n):
 	s = bin(n)[2:]
@@ -60,8 +69,6 @@ def _eve_adc_read(adc_channel, spi_channel):
 		conn.close()		
 		print "Exiting..."
 
-
-
 PORT = 42001
 HOST = "127.0.0.1"
 
@@ -72,7 +79,18 @@ while not s.connected:
   try:
     s = scratch.Scratch(host=HOST,port=PORT)
   except scratch.ScratchError:
+    print "Could not connect to scratch, waiting 2s..."
+    time.sleep(2)
     pass
+
+def cleanup(signal,frame):
+  s.disconnect()
+  GPIO.cleanup()
+  exit(0);
+
+signal.signal(signal.SIGTERM, cleanup)
+signal.signal(signal.SIGINT, cleanup)
+
 
 pin_map = {
   'SDA':3,
@@ -108,15 +126,19 @@ for p in in_pins:
 t = thread.start_new_thread(listen,(s,pin_map,out_pins))
 
 while True:
-  sensors = {};
-  for p in in_pins:
-    sensors[p] = (0 if GPIO.input(pin_map[p]) == GPIO.LOW else 1)
-  sensors['adc0'] = _eve_adc_read(0,0)
-  sensors['adc1'] = _eve_adc_read(1,0)
-
   try:
-    s.sensorupdate(sensors)
-  except scratch.ScratchError:
+    sensors = {};
+    for p in in_pins:
+      sensors[p] = (0 if GPIO.input(pin_map[p]) == GPIO.LOW else 1)
+    sensors['adc0'] = _eve_adc_read(0,0)
+    sensors['adc1'] = _eve_adc_read(1,0)
+
+    try:
+      s.sensorupdate(sensors)
+    except scratch.ScratchError:
+      pass
+
+    time.sleep(0.1)
+  except Exception:
     pass
 
-  time.sleep(0.1)
