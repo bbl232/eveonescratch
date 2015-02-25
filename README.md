@@ -9,6 +9,10 @@ To install this package simply run
 
 `curl -L https://raw.githubusercontent.com/bbl232/eveonescratch/master/setup.sh | bash`
 
+**Note**: You must enable SPI in the advanced options in...
+
+`sudo raspi-config`
+
 # Output
 
 The left side of the EveBoard pin out can be used as outputs.
