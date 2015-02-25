@@ -16,10 +16,9 @@ sudo pip install scratchpy
 
 git clone https://github.com/bbl232/eveonescratch
 sudo mv eveonescratch /opt/eveonescratch
+mkdir -p /home/pi/Desktop
 cp /opt/eveonescratch/scratch.desktop $HOME/Desktop/scratch.desktop 
 
-sudo modprobe spi_bcm2708
-echo spi_bcm2708 | sudo tee -a /etc/modules
-
 echo "alias scratch='/opt/eveonescratch/start.sh'" >> $HOME/.bashrc
-echo "You will need to reboot manually to apply changes."
+echo "NOTE: You have to run 'sudo raspi-config' and enable SPI in the Advanced options section of the menu."
+echo "You will also need to reboot to apply changes."
