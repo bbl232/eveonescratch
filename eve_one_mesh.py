@@ -17,7 +17,8 @@ def parse_broadcast(msg,pin_map,out_pins):
       if args[0].lower() == "pwm":
         pin = args[1].upper()
         if args[2].lower() == "off":
-          pwm[pin].stop();
+          pwm[pin].stop()
+          del pwm[pin]
         elif pin in pwm and float(args[2])>=0.0 and float(args[2])<=100.0:
           pwm[pin].ChangeDutyCycle(float(args[2]))
         elif pin not in pwm and float(args[2])>=0.0 and float(args[2])<=100.0:
