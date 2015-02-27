@@ -4,7 +4,7 @@ set -e
 
 #install scratch
 sudo apt-get update
-sudo apt-get install -y scratch python-pip python-dev build-essential git i2c-tools
+sudo apt-get install -y scratch python-pip python-dev build-essential git i2c-tools python-smbus
 
 git clone https://github.com/bbl232/py-spidev
 pushd py-spidev
