@@ -31,8 +31,6 @@ echo "alias scratch='/opt/eveonescratch/start.sh'" >> $HOME/.bashrc
 sudo chmod 0644 /etc/modules
 sudo echo "i2c-dev" > /etc/modules
 sudo echo "i2c-bcm2708" > /etc/modules
-sudo modprobe i2c-dev
-sudo modprobe i2c-bcm2708
 
 echo "NOTE: You have to run 'sudo raspi-config' and enable SPI, and I2C in the Advanced options section of the menu."
 echo "You will also need to reboot to apply changes."
