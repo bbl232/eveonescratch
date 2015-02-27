@@ -12,6 +12,11 @@ make
 sudo make install
 popd
 
+git clone https://github.com/bbl232/Adafruit_Python_MPR121
+pushd Adafruit_Python_MPR121
+sudo python setup.py install
+popd
+
 sudo pip install scratchpy
 
 git clone https://github.com/bbl232/eveonescratch
@@ -20,5 +25,9 @@ mkdir -p /home/pi/Desktop
 cp /opt/eveonescratch/scratch.desktop $HOME/Desktop/scratch.desktop 
 
 echo "alias scratch='/opt/eveonescratch/start.sh'" >> $HOME/.bashrc
-echo "NOTE: You have to run 'sudo raspi-config' and enable SPI in the Advanced options section of the menu."
+
+sudo echo "i2c-dev" > /etc/modules
+sudo echo "i2c-bcm2708" > /etc/modules
+
+echo "NOTE: You have to run 'sudo raspi-config' and enable SPI, and I2C in the Advanced options section of the menu."
 echo "You will also need to reboot to apply changes."

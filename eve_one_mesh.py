@@ -6,11 +6,60 @@ import scratch
 import signal
 import RPi.GPIO as GPIO
 import spidev
+import Adafruit_MPR121.MPR121 as MPR121
 import thread
+import os
 
 pwm = {}
+cap = MPR121.MPR121()
+pin_map = {
+  '04':7,
+  'TXD':8,
+  'RXD':10,
+  '17':11,
+  '18':12,
+  '21':13,
+  '22':15,
+  '23':16,
+  '24':18,
+  '25':22,
+  'SCLK':23,
+  'CE0':24,
+  'CE1':26
+}
 
-def parse_broadcast(msg,pin_map,out_pins):
+GPIO.setmode(GPIO.BOARD)
+
+out_pins=['04','TXD','RXD','17','18','21']
+in_pins= ['22','23','24','25','CE1']
+
+if os.path.exists("._eveOne_mpr_enabled"):
+  os.remove("._eveOne_mpr_enabled")
+
+def mpr_enable():
+  try:
+    if not cap.begin(address=0x5A,busnum=1):
+      print 'Error, could not initialize'
+    else:
+      os.mknod("._eveOne_mpr_enabled")
+      print 'Successfully enabled'
+  except Exception:
+    pass
+
+def read_touch():
+  values = []
+  
+  try:
+    touched = cap.touched()
+    for i in range(12):
+      bit = 1 << i
+      values.append(1 if touched & bit else 0)
+
+    return values
+  except Exception:
+    pass
+
+def parse_broadcast(msg):
   try:
     if msg[0] == "broadcast":
       args = msg[1].split(' ')
@@ -24,6 +73,9 @@ def parse_broadcast(msg,pin_map,out_pins):
         elif pin not in pwm and float(args[2])>=0.0 and float(args[2])<=100.0:
           pwm[pin] = GPIO.PWM(pin_map[pin], 50)
           pwm[pin].start(float(args[2]))
+      elif args[0].lower() == "mpr121":
+        if args[1].lower() == "on":
+          mpr_enable()
       else:
         pin = args[0].upper()
         try:
@@ -34,11 +86,11 @@ def parse_broadcast(msg,pin_map,out_pins):
   except Exception:
     pass
 
-def listen(s,pin_map,out_pins):
+def listen(s,g):
   while True:
     try:
       msg = s.receive()
-      parse_broadcast(msg,pin_map,out_pins)
+      parse_broadcast(msg)
     except scratch.ScratchError:
       while not s.connected:
         try:
@@ -84,7 +136,16 @@ while not s.connected:
     time.sleep(2)
     pass
 
+for p in out_pins:
+  GPIO.setup(pin_map[p],GPIO.OUT)
+
+for p in in_pins:
+  GPIO.setup(pin_map[p],GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+
+t = thread.start_new_thread(listen,(s,0))
+
 def cleanup(signal,frame):
+  os.remove("._eveOne_mpr_enabled")
   s.disconnect()
   GPIO.cleanup()
   exit(0);
@@ -93,39 +154,6 @@ signal.signal(signal.SIGTERM, cleanup)
 signal.signal(signal.SIGINT, cleanup)
 
 
-pin_map = {
-  'SDA':3,
-  'SCL':5,
-  '4':7,
-  'TXD':8,
-  'RXD':10,
-  '17':11,
-  '18':12,
-  '21':13,
-  '22':15,
-  '23':16,
-  '24':18,
-  'MOSI':19,
-  'MISO':21,
-  '25':22,
-  'SCLK':23,
-  'CE0':24,
-  'CE1':26
-}
-
-GPIO.setmode(GPIO.BOARD)
-
-out_pins=['SDA','SCL','4','TXD','RXD','17','18','21']
-in_pins= ['22','23','24','25','CE1']
-
-for p in out_pins:
-  GPIO.setup(pin_map[p],GPIO.OUT)
-
-for p in in_pins:
-  GPIO.setup(pin_map[p],GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
-
-t = thread.start_new_thread(listen,(s,pin_map,out_pins))
-
 while True:
   try:
     sensors = {};
@@ -133,6 +161,11 @@ while True:
       sensors[p] = (0 if GPIO.input(pin_map[p]) == GPIO.LOW else 1)
     sensors['adc0'] = _eve_adc_read(0,0)
     sensors['adc1'] = _eve_adc_read(1,0)
+
+    if os.path.exists("._eveOne_mpr_enabled"):
+      channels = read_touch()
+      for i in range(12):
+        sensors['touch'+str(i)] = channels[i]
 
     try:
       s.sensorupdate(sensors)
