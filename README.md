@@ -39,7 +39,8 @@ You can also use ADC0 and ADC1 in the sensor value block. The values for these i
 
 You can make use of an MPR121 12 channel capacitive touch sensor hooked up to the IC2 (I2C) bus.
 To enable the touch sensor, simply broadcast
-`mpr121 on`
+`mpr121 on`.
+After you enable the touch sensor, you can use touch* values in the sensor value block to determine what channel is being touched.
 
 # Troubleshooting
 
