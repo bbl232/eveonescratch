@@ -33,15 +33,15 @@ GPIO.setmode(GPIO.BOARD)
 out_pins=['04','TXD','RXD','17','18','21']
 in_pins= ['22','23','24','25','CE1']
 
-if os.path.exists("._eveOne_mpr_enabled"):
-  os.remove("._eveOne_mpr_enabled")
+if os.path.exists("/opt/eveonescratch/._eveOne_mpr_enabled"):
+  os.remove("/opt/eveonescratch/._eveOne_mpr_enabled")
 
 def mpr_enable():
   try:
     if not cap.begin(address=0x5A,busnum=1):
       print 'Error, could not initialize'
     else:
-      os.mknod("._eveOne_mpr_enabled")
+      os.mknod("/opt/eveonescratch/._eveOne_mpr_enabled")
       print 'Successfully enabled'
   except Exception:
     pass
@@ -145,7 +145,7 @@ for p in in_pins:
 t = thread.start_new_thread(listen,(s,0))
 
 def cleanup(signal,frame):
-  os.remove("._eveOne_mpr_enabled")
+  os.remove("/opt/eveonescratch/._eveOne_mpr_enabled")
   s.disconnect()
   GPIO.cleanup()
   exit(0);
@@ -162,7 +162,7 @@ while True:
     sensors['adc0'] = _eve_adc_read(0,0)
     sensors['adc1'] = _eve_adc_read(1,0)
 
-    if os.path.exists("._eveOne_mpr_enabled"):
+    if os.path.exists("/opt/eveonescratch/._eveOne_mpr_enabled"):
       channels = read_touch()
       for i in range(12):
         sensors['touch'+str(i)] = channels[i]
