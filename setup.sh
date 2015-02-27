@@ -21,6 +21,8 @@ sudo pip install scratchpy
 
 git clone https://github.com/bbl232/eveonescratch
 sudo mv eveonescratch /opt/eveonescratch
+sudo chown pi /opt/eveonescratch
+
 mkdir -p /home/pi/Desktop
 cp /opt/eveonescratch/scratch.desktop $HOME/Desktop/scratch.desktop 
 
