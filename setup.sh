@@ -4,7 +4,7 @@ set -e
 
 #install scratch
 sudo apt-get update
-sudo apt-get install -y scratch python-pip python-dev build-essential git
+sudo apt-get install -y scratch python-pip python-dev build-essential git i2c-tools
 
 git clone https://github.com/bbl232/py-spidev
 pushd py-spidev
@@ -21,11 +21,14 @@ sudo pip install scratchpy
 
 git clone https://github.com/bbl232/eveonescratch
 sudo mv eveonescratch /opt/eveonescratch
+sudo chown pi /opt/eveonescratch
+
 mkdir -p /home/pi/Desktop
 cp /opt/eveonescratch/scratch.desktop $HOME/Desktop/scratch.desktop 
 
 echo "alias scratch='/opt/eveonescratch/start.sh'" >> $HOME/.bashrc
 
+sudo chmod 0644 /etc/modules
 sudo echo "i2c-dev" > /etc/modules
 sudo echo "i2c-bcm2708" > /etc/modules
 
