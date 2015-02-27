@@ -43,8 +43,8 @@ def mpr_enable():
     else:
       os.mknod("/opt/eveonescratch/._eveOne_mpr_enabled")
       print 'Successfully enabled'
-  except Exception:
-    pass
+  except Exception as e:
+    print str(e)    
 
 def read_touch():
   values = []
@@ -57,7 +57,7 @@ def read_touch():
 
     return values
   except Exception:
-    pass
+    print str(e)    
 
 def parse_broadcast(msg):
   try:
@@ -82,9 +82,9 @@ def parse_broadcast(msg):
           state = args[1].lower()
           GPIO.output(pin_map[pin], (0 if state == "off" else 1))
         except IndexError:
-          pass
+          print str(e)    
   except Exception:
-    pass
+    print str(e)    
 
 def listen(s,g):
   while True:
@@ -174,5 +174,5 @@ while True:
 
     time.sleep(0.1)
   except Exception:
-    pass
+    print str(e)    
 
