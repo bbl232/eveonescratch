@@ -56,7 +56,7 @@ def read_touch():
       values.append(1 if touched & bit else 0)
 
     return values
-  except Exception:
+  except Exception as e:
     print str(e)    
 
 def parse_broadcast(msg):
@@ -83,7 +83,7 @@ def parse_broadcast(msg):
           GPIO.output(pin_map[pin], (0 if state == "off" else 1))
         except IndexError:
           print str(e)    
-  except Exception:
+  except Exception as e:
     print str(e)    
 
 def listen(s,g):
@@ -173,6 +173,6 @@ while True:
       pass
 
     time.sleep(0.1)
-  except Exception:
+  except Exception as e:
     print str(e)    
 
