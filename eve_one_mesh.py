@@ -145,7 +145,7 @@ for p in in_pins:
 t = thread.start_new_thread(listen,(s,0))
 
 def cleanup(signal,frame):
-  if os.path.exists("/opt/eveonescratch/._eveOne_mpr_enabled")
+  if os.path.exists("/opt/eveonescratch/._eveOne_mpr_enabled"):
     os.remove("/opt/eveonescratch/._eveOne_mpr_enabled")
   s.disconnect()
   GPIO.cleanup()
