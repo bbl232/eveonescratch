@@ -25,6 +25,7 @@ sudo chown pi /opt/eveonescratch
 
 mkdir -p /home/pi/Desktop
 cp /opt/eveonescratch/scratch.desktop $HOME/Desktop/scratch.desktop 
+cp -avr /opt/eveonescratch/Examples $HOME/Desktop/Examples 
 
 echo "alias scratch='/opt/eveonescratch/start.sh'" >> $HOME/.bashrc
 
